@@ -5,7 +5,7 @@
         <div class="flex flex-direction align-items-center">
           <img src="../assets/img/app_btn_back.png" style="height: 18px;margin:0 10px 0 10px">
         </div>
-        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="searchText" style="width: 100%;margin-right: 30px;">
+        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="searchText" @input="searchTextFun" style="width: 100%;margin-right: 30px;">
         </el-input>
       </div>
     </div>
@@ -13,18 +13,20 @@
       <div class="swiper-wrapper">
         <!-- 我的文件-->
         <div class="swiper-slide slidepage">
-          <template v-if="allmsg&&allmsg.length>0">
+          <template v-if="fileList&&fileList.length>0">
             <div style="background: #fff;text-align: left;margin-top: 0.3rem;">
-              <el-row :gutter="20" v-for="(item, index) in allmsg||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
+              <el-row :gutter="20" v-for="(item, index) in fileList||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
                 <el-col :span="2" style="line-height: 1.4rem;">
                   <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
                 </el-col>
                 <el-col :span="22">
                   <div style="margin-top: 0.14rem;">
-                    {{item.title}}
+                    {{item.fileName}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #ccc;font-size: 0.14rem;">
-                    {{item.content}}
+                    {{item.createDate|dateFormatting}} &nbsp;&nbsp;
+                    {{item.dirName}}&nbsp;&nbsp;
+                    {{item.fileSize}}kb
                   </div>
                 </el-col>
               </el-row>
@@ -37,23 +39,23 @@
         <!-- 我的审批-->
         <div class="swiper-slide slidepage">
           <div style="text-align: left;margin-left: 0.1rem;position: absolute;margin-top: 0.3rem;">
-            <el-button type="text" @click="type='3';getApproveRecordList();">全部</el-button>
-            <el-button type="text" @click="type='1';getApproveRecordList();">待审批单据</el-button>
-            <el-button type="text" @click="type='2';getApproveRecordList();">已审批单据</el-button>
+            <el-button type="text" @click="type='3';getApproveRecordList();" class="bottomBorder">全部</el-button>
+            <el-button type="text" @click="type='1';getApproveRecordList();" class="bottomBorder">待审批单据</el-button>
+            <el-button type="text" @click="type='2';getApproveRecordList();" class="bottomBorder">已审批单据</el-button>
           </div>
           <template v-if="boxTableData&&boxTableData.length>0">
-            <div style="background: #fff;text-align: left;margin-top: 1rem;">
+            <div style="background: #fff;text-align: left;margin-top: 1.5rem;margin-bottom: 1.7rem;">
               <el-row :gutter="2" style="line-height: 0.4rem;border-bottom: 1px solid #ededed;clear: both;">
                 <el-col :span="5">
-                  <el-checkbox v-model="checkedall" @change="checkedallFun" style="height: 0.5rem;margin:0 0.1rem">全选</el-checkbox>
+                  <el-checkbox v-model="checkedall" @change="checkedallFun" style="line-height: 0.6rem;margin:0 0.1rem">全选</el-checkbox>
                 </el-col>
-                <el-col :span="10" >
+                <el-col :span="10">
                   <el-button type="text" size="mini" @click="ifthroughtitle='批量审批通过';showDialog()">批量通过</el-button>
                   <el-button type="text" size="mini" @click="ifthroughtitle='批量审批退回';showDialog()">批量退回</el-button>
                 </el-col>
               </el-row>
-              <el-row :gutter="20" v-for="(item, index) in boxTableData||[]" :key="index" style="clear: both;height: 1.8rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="4" style="line-height: 1.8rem;">
+              <el-row :gutter="20" v-for="(item, index) in boxTableData||[]" :key="index" style="clear: both;height: 1.9rem;border-bottom: 1px solid #ededed;">
+                <el-col :span="4" style="line-height: 1.9rem;">
                   <el-checkbox v-model="item.checked" style="height: 0.5rem;margin-left:0.1rem"></el-checkbox>
                   <img :src="item.icon" style="height: 0.5rem;margin-left:0.1rem">
                 </el-col>
@@ -62,7 +64,7 @@
                     {{item.title}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #333;font-size: 0.14rem;">
-                    <span style="margin-right: 0.2rem;"> {{item.code}}</span>
+                    <span style="margin-right: 0rem;"> {{item.code}}</span>
                   </div>
                   <div style="margin-top: 0.2rem;color: #333;font-size: 0.14rem;">
                     <span style="margin-right: 0.2rem;"> {{item.type}} </span>
@@ -88,17 +90,20 @@
         <div class="swiper-slide slidepage">
           <template v-if="allmsg&&allmsg.length>0">
             <div style="background: #fff;text-align: left;margin-top: 0.3rem;">
-              <el-row :gutter="20" v-for="(item, index) in allmsg||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="2" style="line-height: 1.4rem;">
-                  <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
+              <el-row :gutter="20" v-for="(item, index) in allmsg||[]" :key="index" style="height: 1.7rem;border-bottom: 1px solid #ededed;">
+                <el-col :span="3" style="line-height: 1.7rem;">
+                  <img :src="item.icon" style="height: 0.8rem;margin-left:0.1rem">
                 </el-col>
-                <el-col :span="22">
+                <el-col :span="14">
                   <div style="margin-top: 0.14rem;">
                     {{item.title}}
                   </div>
-                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 0.14rem;">
+                  <div style="margin-top: 0.1rem;color: #ccc;font-size: 0.14rem;overflow: hidden;">
                     {{item.content}}
                   </div>
+                </el-col>
+                <el-col :span="6" style="color: #ccc;font-size: 0.14rem;">
+                  {{item.time}}
                 </el-col>
               </el-row>
             </div>
@@ -112,7 +117,7 @@
     <div class="bottomClass">
       <div class="swiper-container" id="nav">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
+          <div class="swiper-slide" @click="appFileListByCondition">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的文件</span>
           </div>
@@ -147,6 +152,17 @@
   import tixing from '@/assets/img/tixing.png';
   import yisp from '@/assets/img/yisp.png';
   import daisp from '@/assets/img/daisp.png';
+
+  import doc from '@/assets/img/doc.png';
+  import docx from '@/assets/img/docx.png';
+  import jpg from '@/assets/img/jpg.png';
+  import png from '@/assets/img/png.png';
+  import xls from '@/assets/img/xls.png';
+  import xlsx from '@/assets/img/xlsx.png';
+  import ppt from '@/assets/img/ppt.png';
+  import pptx from '@/assets/img/pptx.png';
+  import pdf from '@/assets/img/pdf.png';
+  import txt from '@/assets/img/txt.png';
   import {
     swiperFun
   } from './swiper.js'
@@ -156,9 +172,7 @@
     data() {
       return {
         searchText: null,
-        fileList: [{
-          name: 23
-        }],
+        fileList: [],
         boxTableData: [],
         pn: 1,
         ps: 20,
@@ -171,9 +185,17 @@
         approvalObj: null,
       };
     },
+    filters: {
+      dateFormatting(a) {
+        if (a) {
+          let value = new Date(a);
+          return value.getFullYear() + '-' + (value.getMonth() * 1 + 1) + '-' + value.getDate();
+        }
+      }
+    },
     mounted() {
       swiperFun();
-      this.getmsgFun();
+      this.appFileListByCondition();
     },
     methods: {
       showDialog() {
@@ -200,57 +222,86 @@
           this.boxTableData = JSON.parse(JSON.stringify(this.boxTableData));
         })
       },
-      async getmsgFun() {
-        this.allmsg = [];
-        /*  const {
-            code,
-            data,
-          } = await API.remindbasicinfo();
-          if (code == '0000') { */
-        let obj = {
-          borrow: [{
-            document_code: 2121
-          }],
-          approve: [{
-              approve_type: 1,
-              document_code: 121
-            },
-            {
-              approve_type: 2,
-              document_code: 121
+      searchTextFun() {
+        let that = this;
+        setTimeout(() => {
+          that.appFileListByCondition();
+          that.getApproveRecordList();
+          that.getmsgFun();
+        }, 600)
+      },
+      async appFileListByCondition() {
+        const {
+          code,
+          data,
+        } = await API.appFileListByCondition({
+          fileName: this.searchText
+        });
+        if (code == '0000') {
+          this.fileList = data;
+          this.fileList.forEach(a => {
+            if (a.fileTypeName == 'txt') {
+              a.icon = txt
+            }else if(a.fileTypeName == 'pdf'){
+               a.icon = pdf
+            }else if(a.fileTypeName == 'ppt'){
+               a.icon = ppt
+            }else if(a.fileTypeName == 'pptx'){
+               a.icon = pptx
+            }else if(a.fileTypeName == 'doc'){
+               a.icon = doc
+            }else if(a.fileTypeName == 'xls'){
+               a.icon = xls
+            }else if(a.fileTypeName == 'xlsx'){
+               a.icon = xlsx
+            }else if(a.fileTypeName == 'jpg'){
+               a.icon = jpg
+            }else if(a.fileTypeName == 'png'){
+               a.icon = png
+            }else if(a.fileTypeName == 'docx'){
+               a.icon = docx
             }
-          ],
-          expire: [{
-            approve_type: 1,
-            document_code: 121,
-            approve_status: 1
-          }]
+          });
         }
-        obj.borrow.forEach(a => {
-          this.allmsg.push({
-            icon: daoqi,
-            title: '借阅到期提醒',
-            content: '文档编号：' + a.document_code + '借阅截止时间还有三小时，请及时处理'
-          })
+      },
+      async getmsgFun() {
+        let time = this.dateFormatting(new Date());
+        this.allmsg = [];
+        const {
+          code,
+          data,
+        } = await API.remindbasicinfo({
+          document_code: this.searchText
         });
-        obj.approve.forEach(a => {
-          let status = (a.approve_type == 1) ? '正在送审...' : '正在借阅...';
-          this.allmsg.push({
-            icon: spicon,
-            title: '审批提醒',
-            content: '文档编号：' + a.document_code + '' + status + '请您审批'
-          })
-        });
-        obj.expire.forEach(a => {
-          let title = (a.approve_type == 1) ? '送审审批提醒' : '借阅审批提醒';
-          let status = (a.approve_status == 1) ? '审批成功' : '审批失败';
-          this.allmsg.push({
-            icon: tixing,
-            title: title,
-            content: '文档编号：' + a.document_code + '已经' + status
-          })
-        });
-        //}
+        if (code == '0000') {
+          data.borrow.forEach(a => {
+            this.allmsg.push({
+              time: time,
+              icon: daoqi,
+              title: '借阅到期提醒',
+              content: '文档编号：' + a.document_code + '借阅截止时间还有三小时，请及时处理'
+            })
+          });
+          data.approve.forEach(a => {
+            let status = (a.approve_type == 1) ? '正在送审...' : '正在借阅...';
+            this.allmsg.push({
+              time: time,
+              icon: spicon,
+              title: '审批提醒',
+              content: '文档编号：' + a.document_code + '' + status + '请您审批'
+            })
+          });
+          data.expire.forEach(a => {
+            let title = (a.approve_type == 1) ? '送审审批提醒' : '借阅审批提醒';
+            let status = (a.approve_status == 1) ? '审批成功' : '审批失败';
+            this.allmsg.push({
+              time: time,
+              icon: tixing,
+              title: title,
+              content: '文档编号：' + a.document_code + '已经' + status
+            })
+          });
+        }
       },
       onSearchFun() {
         let data = [];
@@ -317,7 +368,7 @@
                 title: a.documentName,
                 code: '单据编号：' + a.documentCode,
                 type: '单据类别：' + type,
-                time:  this.dateFormatting(a.createTime),//'申请时间：' +
+                time: this.dateFormatting(a.createTime), //'申请时间：' +
                 person: '申请人：' + a.applyName
               })
             });
@@ -330,6 +381,10 @@
 <style lang="less">
   .dataShow {
     height: 100%;
+
+    .bottomBorder:hover {
+      border-bottom: 3px solid deepskyblue;
+    }
 
     .flex {
       display: -webkit-flex;
