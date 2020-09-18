@@ -36,10 +36,10 @@ export default {
       'Content-Type': 'application/json'
     }
   }),
+  queryApproveRecordDetail: API('/approveRecord/queryApproveRecordDetail', 'get', {}),
   appFileListByCondition: API('/file/appFileListByCondition', 'post', {
     headers: {
       'Content-Type': 'application/json'
     }
   }),
-  queryApproveRecordDetail: API('/approveRecord/queryApproveRecordDetail', 'get', {}),
 };

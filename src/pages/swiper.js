@@ -41,7 +41,7 @@ export function swiperFun() {
 						var r = Math.floor((255 - 101) * (1 - Math.pow(Math.abs(slideProgress), 2)) + 101)
 						var g = Math.floor((255 - 134) * (1 - Math.pow(Math.abs(slideProgress), 2)) + 134)
 						var b = Math.floor((255 - 164) * (1 - Math.pow(Math.abs(slideProgress), 2)) + 164)
-						navSwiper.slides.eq(i).find('span').css('color', 'rgba(' + r + ',' + g + ',' + b + ',1)')
+						navSwiper.slides.eq(i).find('span').css('color', 'rgba(101,134,164,1)')
 					}
 				}
 			},
@@ -53,7 +53,7 @@ export function swiperFun() {
 				bar.transform('translateX(' + activeSlidePosition + 'px)')
 				//释放时文字变色过渡
 				navSwiper.slides.eq(activeIndex).find('span').transition(tSpeed)
-				navSwiper.slides.eq(activeIndex).find('span').css('color', 'rgba(255,255,255,1)')
+				navSwiper.slides.eq(activeIndex).find('span').css('color', 'rgba(101,134,164,1)')
 				if (activeIndex > 0) {
 					navSwiper.slides.eq(activeIndex - 1).find('span').transition(tSpeed)
 					navSwiper.slides.eq(activeIndex - 1).find('span').css('color', 'rgba(101,134,164,1)')

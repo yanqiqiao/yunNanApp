@@ -3,7 +3,7 @@
     <div id="top">
       <div class="flex">
         <div class="flex flex-direction align-items-center">
-          <img src="../assets/img/app_btn_back.png" style="height: 18px;margin:0 10px 0 10px">
+          <img src="../assets/img/app_btn_back.png" style="height: 18px;margin:0 10px 0 10px" @click="backFun">
         </div>
         <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="searchText" @input="searchTextFun" style="width: 100%;margin-right: 30px;">
         </el-input>
@@ -14,7 +14,7 @@
         <!-- 我的文件-->
         <div class="swiper-slide slidepage">
           <template v-if="fileList&&fileList.length>0">
-            <div style="background: #fff;text-align: left;margin-top: 0.3rem;">
+            <div style="background: #fff;text-align: left;margin-top: 0.3rem;padding-left: 0.2rem;">
               <el-row :gutter="20" v-for="(item, index) in fileList||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
                 <el-col :span="2" style="line-height: 1.4rem;">
                   <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
@@ -23,7 +23,7 @@
                   <div style="margin-top: 0.14rem;">
                     {{item.fileName}}
                   </div>
-                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 0.14rem;">
+                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
                     {{item.createDate|dateFormatting}} &nbsp;&nbsp;
                     {{item.dirName}}&nbsp;&nbsp;
                     {{item.fileSize}}kb
@@ -44,40 +44,42 @@
             <el-button type="text" @click="type='2';getApproveRecordList();" class="bottomBorder">已审批单据</el-button>
           </div>
           <template v-if="boxTableData&&boxTableData.length>0">
-            <div style="background: #fff;text-align: left;margin-top: 1.5rem;margin-bottom: 1.7rem;">
+            <div style="background: #fff;text-align: left;margin-top: 1.5rem;padding-bottom:1px ;">
               <el-row :gutter="2" style="line-height: 0.4rem;border-bottom: 1px solid #ededed;clear: both;">
                 <el-col :span="5">
                   <el-checkbox v-model="checkedall" @change="checkedallFun" style="line-height: 0.6rem;margin:0 0.1rem">全选</el-checkbox>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="10" v-if="type=='1'">
                   <el-button type="text" size="mini" @click="ifthroughtitle='批量审批通过';showDialog()">批量通过</el-button>
                   <el-button type="text" size="mini" @click="ifthroughtitle='批量审批退回';showDialog()">批量退回</el-button>
                 </el-col>
               </el-row>
               <el-row :gutter="20" v-for="(item, index) in boxTableData||[]" :key="index" style="clear: both;height: 1.9rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="4" style="line-height: 1.9rem;">
+                <el-col :span="3" :style="{'line-height':'1.9rem'}">
                   <el-checkbox v-model="item.checked" style="height: 0.5rem;margin-left:0.1rem"></el-checkbox>
-                  <img :src="item.icon" style="height: 0.5rem;margin-left:0.1rem">
                 </el-col>
-                <el-col :span="14">
-                  <div style="margin-top: 0.1rem;font-size:0.2rem;font-weight: 700;">
+                <el-col :span="15">
+                  <div style="margin-top: 0.1rem;">
                     {{item.title}}
                   </div>
-                  <div style="margin-top: 0.2rem;color: #333;font-size: 0.14rem;">
+                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
                     <span style="margin-right: 0rem;"> {{item.code}}</span>
                   </div>
-                  <div style="margin-top: 0.2rem;color: #333;font-size: 0.14rem;">
+                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
                     <span style="margin-right: 0.2rem;"> {{item.type}} </span>
                     {{item.person}}
                   </div>
                 </el-col>
                 <el-col :span="6">
-                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 0.14rem;">
+                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
                     {{item.time}}
                   </div>
-                  <!--  v-if="type=='1'" -->
-                  <el-button type="text" size="mini" @click="approvalObj=item;ifthroughtitle='审批通过';ifthrough=true">通过</el-button>
-                  <el-button type="text" size="mini" @click="approvalObj=item;ifthroughtitle='审批退回';ifthrough=true">退回</el-button>
+                  <template v-if="type=='1'">
+                    <el-button type="text" size="mini" @click="approvalObj=item;ifthroughtitle='审批通过';ifthrough=true">通过</el-button>
+                    <el-button type="text" size="mini" @click="approvalObj=item;ifthroughtitle='审批退回';ifthrough=true">退回</el-button>
+                  </template>
+                  <div class="spbg" :style="{'background-image':'url('+item.icon+')'}"></div>
+
                 </el-col>
               </el-row>
             </div>
@@ -89,20 +91,20 @@
         <!-- 我的消息提醒 -->
         <div class="swiper-slide slidepage">
           <template v-if="allmsg&&allmsg.length>0">
-            <div style="background: #fff;text-align: left;margin-top: 0.3rem;">
-              <el-row :gutter="20" v-for="(item, index) in allmsg||[]" :key="index" style="height: 1.7rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="3" style="line-height: 1.7rem;">
+            <div style="background: #fff;text-align: left;margin-top: 0.3rem;padding-left: 0.2rem;padding-bottom: 1px;">
+              <el-row :gutter="20" v-for="(item, index) in allmsg||[]" :key="index" style="height: 1.8rem;border-bottom: 1px solid #ededed;">
+                <el-col :span="3" style="line-height: 1.8rem;">
                   <img :src="item.icon" style="height: 0.8rem;margin-left:0.1rem">
                 </el-col>
                 <el-col :span="14">
                   <div style="margin-top: 0.14rem;">
                     {{item.title}}
                   </div>
-                  <div style="margin-top: 0.1rem;color: #ccc;font-size: 0.14rem;overflow: hidden;">
+                  <div style="margin-top: 0.1rem;color: #ccc;font-size:12px;overflow: hidden;">
                     {{item.content}}
                   </div>
                 </el-col>
-                <el-col :span="6" style="color: #ccc;font-size: 0.14rem;">
+                <el-col :span="6" style="color: #ccc;font-size: 12px;margin-top: 0.2rem;">
                   {{item.time}}
                 </el-col>
               </el-row>
@@ -117,7 +119,7 @@
     <div class="bottomClass">
       <div class="swiper-container" id="nav">
         <div class="swiper-wrapper">
-          <div class="swiper-slide" @click="appFileListByCondition">
+          <div class="swiper-slide" @click="appFileListByCondition()">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的文件</span>
           </div>
@@ -176,7 +178,7 @@
         boxTableData: [],
         pn: 1,
         ps: 20,
-        type: '1',
+        type: '3',
         searchText: '',
         allmsg: [],
         checkedall: false,
@@ -196,8 +198,13 @@
     mounted() {
       swiperFun();
       this.appFileListByCondition();
+      this.getApproveRecordList();
+      this.getmsgFun();
     },
     methods: {
+      backFun() {
+        this.$router.push('/');
+      },
       showDialog() {
         let arr = this.boxTableData.filter(a => {
           return a.checked;
@@ -242,24 +249,24 @@
           this.fileList.forEach(a => {
             if (a.fileTypeName == 'txt') {
               a.icon = txt
-            }else if(a.fileTypeName == 'pdf'){
-               a.icon = pdf
-            }else if(a.fileTypeName == 'ppt'){
-               a.icon = ppt
-            }else if(a.fileTypeName == 'pptx'){
-               a.icon = pptx
-            }else if(a.fileTypeName == 'doc'){
-               a.icon = doc
-            }else if(a.fileTypeName == 'xls'){
-               a.icon = xls
-            }else if(a.fileTypeName == 'xlsx'){
-               a.icon = xlsx
-            }else if(a.fileTypeName == 'jpg'){
-               a.icon = jpg
-            }else if(a.fileTypeName == 'png'){
-               a.icon = png
-            }else if(a.fileTypeName == 'docx'){
-               a.icon = docx
+            } else if (a.fileTypeName == 'pdf') {
+              a.icon = pdf
+            } else if (a.fileTypeName == 'ppt') {
+              a.icon = ppt
+            } else if (a.fileTypeName == 'pptx') {
+              a.icon = pptx
+            } else if (a.fileTypeName == 'doc') {
+              a.icon = doc
+            } else if (a.fileTypeName == 'xls') {
+              a.icon = xls
+            } else if (a.fileTypeName == 'xlsx') {
+              a.icon = xlsx
+            } else if (a.fileTypeName == 'jpg') {
+              a.icon = jpg
+            } else if (a.fileTypeName == 'png') {
+              a.icon = png
+            } else if (a.fileTypeName == 'docx') {
+              a.icon = docx
             }
           });
         }
@@ -384,6 +391,15 @@
 
     .bottomBorder:hover {
       border-bottom: 3px solid deepskyblue;
+    }
+
+    .spbg {
+      height: 25px;
+      width: 25px;
+      background-repeat: no-repeat;
+      background-position: top;
+      background-size: 100% 100%;
+      background-clip: content-box;
     }
 
     .flex {
