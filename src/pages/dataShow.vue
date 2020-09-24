@@ -9,7 +9,7 @@
         </el-input>
       </div>
     </div>
-    <div class="swiper-container" id="page">
+    <div class="swiper-container" id="page" style="height: 100%;">
       <div class="swiper-wrapper">
         <!-- 我的文件-->
         <div class="swiper-slide slidepage">
@@ -197,11 +197,22 @@
     },
     mounted() {
       swiperFun();
-      this.appFileListByCondition();
       this.getApproveRecordList();
       this.getmsgFun();
+      this.appFileListByCondition();
     },
     methods: {
+      getHeight(index) {
+        var a = document.getElementById('page');
+        var b = document.getElementsByClassName('slidepage');
+        if (index != 0) {
+          a.style.height = '100%';
+          a.style.height = b[index].scrollHeight + 'px';
+        } else {
+          a.style.height = '100%';
+        }
+       // console.log(index, b[index].clientHeight, a.style.height, a.scrollHeight)
+      },
       backFun() {
         this.$router.push('/');
       },
@@ -238,6 +249,7 @@
         }, 600)
       },
       async appFileListByCondition() {
+        this.getHeight(0);
         const {
           code,
           data,
@@ -272,6 +284,7 @@
         }
       },
       async getmsgFun() {
+        this.getHeight(2);
         let time = this.dateFormatting(new Date());
         this.allmsg = [];
         const {
@@ -345,6 +358,7 @@
         }
       },
       async getApproveRecordList() { //审批
+        this.getHeight(1);
         let obj = {};
         obj = {
           "approveStatus": this.type,
