@@ -20,7 +20,7 @@
                   <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
                 </el-col>
                 <el-col :span="22">
-                  <div style="margin-top: 0.14rem;">
+                  <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);height: 0.5rem;text-overflow: ellipsis;">
                     {{item.fileName}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
@@ -59,7 +59,7 @@
                   <el-checkbox v-model="item.checked" style="height: 0.5rem;margin-left:0.1rem"></el-checkbox>
                 </el-col>
                 <el-col :span="15">
-                  <div style="margin-top: 0.1rem;">
+                  <div style="margin-top: 0.1rem;height: 0.4rem;" class="titleElipse">
                     {{item.title}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
@@ -97,7 +97,7 @@
                   <img :src="item.icon" style="height: 0.8rem;margin-left:0.1rem">
                 </el-col>
                 <el-col :span="14">
-                  <div style="margin-top: 0.14rem;">
+                  <div style="margin-top: 0.14rem;" class="titleElipse">
                     {{item.title}}
                   </div>
                   <div style="margin-top: 0.1rem;color: #ccc;font-size:12px;overflow: hidden;">
@@ -391,6 +391,13 @@
 
     .bottomBorder:hover {
       border-bottom: 3px solid deepskyblue;
+    }
+
+    .titleElipse {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      word-break: break-all;
     }
 
     .spbg {
