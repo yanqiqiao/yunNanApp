@@ -20,7 +20,7 @@
                   <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
                 </el-col>
                 <el-col :span="22">
-                  <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);height: 0.5rem;text-overflow: ellipsis;">
+                  <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);text-overflow: ellipsis;">
                     {{item.fileName}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
@@ -59,7 +59,7 @@
                   <el-checkbox v-model="item.checked" style="height: 0.5rem;margin-left:0.1rem"></el-checkbox>
                 </el-col>
                 <el-col :span="15">
-                  <div style="margin-top: 0.1rem;height: 0.4rem;" class="titleElipse">
+                  <div style="margin-top: 0.1rem;" class="titleElipse">
                     {{item.title}}
                   </div>
                   <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
