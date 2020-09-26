@@ -42,4 +42,9 @@ export default {
       'Content-Type': 'application/json'
     }
   }),
+  checkWaterMarkExistAPI: API('/watermark/checkWaterMarkExist', 'post', {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }), // 打印文件校验
 };

@@ -9,26 +9,28 @@
         </el-input>
       </div>
     </div>
-    <div class="swiper-container" id="page" style="height: 100%;">
+    <div class="swiper-container" id="page" style="height: 100%;border: 1px solid red;">
       <div class="swiper-wrapper">
         <!-- 我的文件-->
         <div class="swiper-slide slidepage">
           <template v-if="fileList&&fileList.length>0">
             <div style="background: #fff;text-align: left;margin-top: 0.3rem;padding-left: 0.2rem;">
               <el-row :gutter="20" v-for="(item, index) in fileList||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="2" style="line-height: 1.4rem;">
-                  <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
-                </el-col>
-                <el-col :span="22">
-                  <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);text-overflow: ellipsis;">
-                    {{item.fileName}}
-                  </div>
-                  <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
-                    {{item.createDate|dateFormatting}} &nbsp;&nbsp;
-                    {{item.dirName}}&nbsp;&nbsp;
-                    {{item.fileSize}}kb
-                  </div>
-                </el-col>
+                <div @click="fileView(item)">
+                  <el-col :span="2" style="line-height: 1.4rem;">
+                    <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
+                  </el-col>
+                  <el-col :span="22">
+                    <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);text-overflow: ellipsis;">
+                      {{item.fileName}}
+                    </div>
+                    <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
+                      {{item.createDate|dateFormatting}} &nbsp;&nbsp;
+                      {{item.dirName}}&nbsp;&nbsp;
+                      {{item.fileSize}}kb
+                    </div>
+                  </el-col>
+                </div>
               </el-row>
             </div>
           </template>
@@ -39,9 +41,9 @@
         <!-- 我的审批-->
         <div class="swiper-slide slidepage">
           <div style="text-align: left;margin-left: 0.1rem;position: absolute;margin-top: 0.3rem;">
-            <el-button type="text" @click="type='3';getApproveRecordList();" class="bottomBorder">全部</el-button>
-            <el-button type="text" @click="type='1';getApproveRecordList();" class="bottomBorder">待审批单据</el-button>
-            <el-button type="text" @click="type='2';getApproveRecordList();" class="bottomBorder">已审批单据</el-button>
+            <el-button type="text" @click="type='3';searchApproveRecordList();" class="bottomBorder">全部</el-button>
+            <el-button type="text" @click="type='1';searchApproveRecordList();" class="bottomBorder">待审批单据</el-button>
+            <el-button type="text" @click="type='2';searchApproveRecordList();" class="bottomBorder">已审批单据</el-button>
           </div>
           <template v-if="boxTableData&&boxTableData.length>0">
             <div style="background: #fff;text-align: left;margin-top: 1.5rem;padding-bottom:1px ;">
@@ -110,9 +112,9 @@
               </el-row>
             </div>
           </template>
-          <template v-else>
+          <div v-else style="border: 1px solid deeppink;height: 100%;">
             <div style="margin-top:3rem;">暂无消息提醒</div>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -168,7 +170,7 @@
   import {
     swiperFun
   } from './swiper.js'
-  import API from '@/assets/js/api.js';
+  import API from '@/utils/api.js';
   export default {
     props: {},
     data() {
@@ -202,16 +204,24 @@
       this.appFileListByCondition();
     },
     methods: {
+      fileView(item) { //文件预览
+        if (!item.fileId) {
+          return
+        }
+        window.open(
+          `/fileView/${item.fileId}/${item.fileTypeName}/${1}/${item.dirId}`,
+          "_blank");
+      },
       getHeight(index) {
         var a = document.getElementById('page');
         var b = document.getElementsByClassName('slidepage');
+        var cbody= document.getElementsByTagName('body');
+        a.style.height = '100%';
         if (index != 0) {
           a.style.height = '100%';
           a.style.height = b[index].scrollHeight + 'px';
-        } else {
-          a.style.height = '100%';
         }
-       // console.log(index, b[index].clientHeight, a.style.height, a.scrollHeight)
+        console.log(index, b[index].clientHeight,cbody.clientHeight, a.style.height, a.scrollHeight);
       },
       backFun() {
         this.$router.push('/');
@@ -248,8 +258,13 @@
           that.getmsgFun();
         }, 600)
       },
+      searchApproveRecordList() {
+        let that = this;
+        setTimeout(() => {
+          that.getApproveRecordList();
+        }, 600)
+      },
       async appFileListByCondition() {
-        this.getHeight(0);
         const {
           code,
           data,
@@ -257,6 +272,7 @@
           fileName: this.searchText
         });
         if (code == '0000') {
+          this.getHeight(0);
           this.fileList = data;
           this.fileList.forEach(a => {
             if (a.fileTypeName == 'txt') {
@@ -284,7 +300,6 @@
         }
       },
       async getmsgFun() {
-        this.getHeight(2);
         let time = this.dateFormatting(new Date());
         this.allmsg = [];
         const {
@@ -294,6 +309,7 @@
           document_code: this.searchText
         });
         if (code == '0000') {
+          this.getHeight(2);
           data.borrow.forEach(a => {
             this.allmsg.push({
               time: time,
@@ -358,7 +374,6 @@
         }
       },
       async getApproveRecordList() { //审批
-        this.getHeight(1);
         let obj = {};
         obj = {
           "approveStatus": this.type,
@@ -372,6 +387,7 @@
           data,
         } = await API.approveRecordList(obj);
         if (code == '0000') {
+          this.getHeight(1);
           if (data.list) {
             let list = data.list;
             list.forEach(a => {

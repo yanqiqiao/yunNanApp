@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-  import API from '@/assets/js/api.js';
+  import API from '@/utils/api.js';
   import md5 from 'md5'
   export default {
     props: {},
@@ -102,7 +102,7 @@
 
     .el-form-item__error {
       margin-left: 41%;
-      margin-top:10px;
+      margin-top: 10px;
     }
 
     .loginBtn {
