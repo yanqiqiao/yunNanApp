@@ -5,15 +5,35 @@ import store from './store/index.js'
 import VueResource from 'vue-resource'
 import ElementUI from 'element-ui'
 import Axios from 'axios'
-import Common from './utils/common.js'
 import './assets/css/base.css'
 import './assets/css/style.css'
 import './assets/css/swiper.min.css'
 import config from '../static/server'
+import {formaterFileSize, elementUpSize, toBase64, base64To, previewMethods, isCanPreView, splitPath, commonDownloadfile} from '@/utils/common.js';
 
+
+window.goPdfPage = function(bind ) {
+  window.open(`/fileView/${bind.getAttribute('dirTypeName')}/${bind.getAttribute('parentId')}/${toBase64(bind.getAttribute('filePath'))}}`)
+};
+
+Vue.directive('pdfPreview', {
+  /**
+   * v-pdfPreview="{
+   *  'filePath':scope.row.filePath, 文件路径 例如‘home/file/23432i4320.png’
+   *  'dirTypeName':  scope.row.dirTypeName, 文件类型名 例如 png
+   *  'parentId':scope.row.parentId 目录ID 如果没有传 module
+   * }
+  */
+  bind: function(el, bind) {
+    let filePath = bind.value.filePath,
+    dirTypeName = bind.value.dirTypeName, // 文件类型名
+    parentId= bind.value.parentId, // 文件父级目录id
+    inml = `<span  parentId="${parentId}" filePath="${filePath}" dirTypeName="${dirTypeName}" onclick="goPdfPage(this)">预览</span>`; // 动态插入的dom inml
+    el.innerHTML = inml;
+  }
+})
 Vue.use(ElementUI)
 Vue.use(VueResource)
-Vue.use(Common)
 Vue.prototype.$axios = Axios
 Vue.config.productionTip = false
 //Axios.defaults.baseURL = config.BASEURL;

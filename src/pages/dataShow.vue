@@ -9,20 +9,26 @@
         </el-input>
       </div>
     </div>
-    <div class="swiper-container" id="page" style="height: 100%;border: 1px solid red;">
+    <div class="swiper-container" id="page" style="height: 100%;">
       <div class="swiper-wrapper">
         <!-- 我的文件-->
         <div class="swiper-slide slidepage">
           <template v-if="fileList&&fileList.length>0">
             <div style="background: #fff;text-align: left;margin-top: 0.3rem;padding-left: 0.2rem;">
               <el-row :gutter="20" v-for="(item, index) in fileList||[]" :key="index" style="height: 1.4rem;border-bottom: 1px solid #ededed;">
-                <div @click="fileView(item)">
+                <div>
                   <el-col :span="2" style="line-height: 1.4rem;">
                     <img :src="item.icon" style="height: 0.5rem;margin:0 0.1rem">
                   </el-col>
                   <el-col :span="22">
-                    <div class="titleElipse" style="margin-top: 0.14rem;width: calc(100% - 0.1rem);text-overflow: ellipsis;">
-                      {{item.fileName}}
+                    <div class="titleElipse">
+                      <span class="titleElipse" style="float: left;display: block;margin-top: 0.14rem;width: calc(90% - 0.2rem);padding-right: 0.1rem;text-overflow: ellipsis;">
+                        {{item.fileName}}</span>
+                       <span v-if="isCanPreView(item.fileTypeName)" style="float: left;display: block;cursor: pointer;"
+                        v-pdfPreview="{'filePath':item.filePath, 
+                        'dirTypeName':item.fileTypeName, 
+                        'parentId':item.dirId}"
+                         ></span>
                     </div>
                     <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
                       {{item.createDate|dateFormatting}} &nbsp;&nbsp;
@@ -112,7 +118,7 @@
               </el-row>
             </div>
           </template>
-          <div v-else style="border: 1px solid deeppink;height: 100%;">
+          <div v-else style="height: 100%;">
             <div style="margin-top:3rem;">暂无消息提醒</div>
           </div>
         </div>
@@ -171,10 +177,15 @@
     swiperFun
   } from './swiper.js'
   import API from '@/utils/api.js';
+  import {
+    toBase64,
+    isCanPreView,
+  } from '@/utils/common.js';
   export default {
     props: {},
     data() {
       return {
+        isCanPreView: isCanPreView,
         searchText: null,
         fileList: [],
         boxTableData: [],
@@ -199,8 +210,8 @@
     },
     mounted() {
       swiperFun();
-      this.getApproveRecordList();
-      this.getmsgFun();
+      /* this.getApproveRecordList();
+       this.getmsgFun(); */
       this.appFileListByCondition();
     },
     methods: {
@@ -208,20 +219,23 @@
         if (!item.fileId) {
           return
         }
+        /* window.open(
+           `/fileView/${item.fileId}/${item.fileTypeName}/${item.dirId}`,
+           "_blank"); */
         window.open(
-          `/fileView/${item.fileId}/${item.fileTypeName}/${1}/${item.dirId}`,
-          "_blank");
+          `/fileView/${item.fileTypeName}/${item.dirId}/${toBase64(item.filePath)}`
+        )
       },
-      getHeight(index) {
+      getHeight(index, length) {
+        let that = this;
         var a = document.getElementById('page');
         var b = document.getElementsByClassName('slidepage');
-        var cbody= document.getElementsByTagName('body');
-        a.style.height = '100%';
-        if (index != 0) {
-          a.style.height = '100%';
-          a.style.height = b[index].scrollHeight + 'px';
-        }
-        console.log(index, b[index].clientHeight,cbody.clientHeight, a.style.height, a.scrollHeight);
+        setTimeout(() => {
+          that.$nextTick(() => {
+            a.style.height = length + 'rem';
+          })
+        }, 300)
+        console.log(index, b[index].clientHeight, a.style.height, a.scrollHeight);
       },
       backFun() {
         this.$router.push('/');
@@ -272,7 +286,11 @@
           fileName: this.searchText
         });
         if (code == '0000') {
-          this.getHeight(0);
+          let height = 4;
+          if (data) {
+            height = 0.2 + 1.4 * data.length;
+          }
+          this.getHeight(0, height);
           this.fileList = data;
           this.fileList.forEach(a => {
             if (a.fileTypeName == 'txt') {
@@ -309,7 +327,6 @@
           document_code: this.searchText
         });
         if (code == '0000') {
-          this.getHeight(2);
           data.borrow.forEach(a => {
             this.allmsg.push({
               time: time,
@@ -337,6 +354,11 @@
               content: '文档编号：' + a.document_code + '已经' + status
             })
           });
+          let length = 4;
+          if (this.allmsg.length > 0) {
+            length = 1.4 * this.allmsg.length + 1;
+          }
+          this.getHeight(2, length);
         }
       },
       onSearchFun() {
@@ -387,7 +409,11 @@
           data,
         } = await API.approveRecordList(obj);
         if (code == '0000') {
-          this.getHeight(1);
+          let length = 4;
+          if (data.list) {
+            length = data.list.length * 1.9 + 2;
+          }
+          this.getHeight(1, length);
           if (data.list) {
             let list = data.list;
             list.forEach(a => {
