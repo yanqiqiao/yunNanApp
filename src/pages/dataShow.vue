@@ -409,11 +409,6 @@
           data,
         } = await API.approveRecordList(obj);
         if (code == '0000') {
-          let length = 4;
-          if (data.list) {
-            length = data.list.length * 1.9 + 2;
-          }
-          this.getHeight(1, length);
           if (data.list) {
             let list = data.list;
             list.forEach(a => {
@@ -436,6 +431,11 @@
               })
             });
           }
+          let length = 4;
+          if (data.list.length>0) {
+            length = data.list.length * 1.9 + 2;
+          }
+          this.getHeight(1, length);
         }
       },
     }
