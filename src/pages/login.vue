@@ -7,7 +7,7 @@
         <div class="flex flex-direction align-items-center" style="margin: 2rem 1.6rem 0 1.6rem;border-bottom: 1px #ffffff solid;height: 0.8rem">
           <img src="../assets/img/icon_user.png" style="width: 0.5rem;height: 0.5rem">
           <div style="color: #ffffff;margin:0 0.3rem 0 0.3rem;font-size: 0.4rem">用户名</div>
-          <el-input v-model="ruleForm.name" placeholder="请输入的登录名称" style="width: 60%;background: rgba(255,255,255,0);border: none;height: 100%;color: #ffffff;outline: none">
+          <el-input v-model="ruleForm.name" placeholder="请输入登录名称" style="width: 60%;background: rgba(255,255,255,0);border: none;height: 100%;color: #ffffff;outline: none">
           </el-input>
         </div>
       </el-form-item>
