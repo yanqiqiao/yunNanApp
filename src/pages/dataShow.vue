@@ -30,7 +30,7 @@
                         'parentId':item.dirId}"
                          ></span>
                     </div>
-                    <div style="margin-top: 0.2rem;color: #ccc;font-size: 12px;">
+                    <div style="margin-top: 0.15rem;color: #ccc;font-size: 12px;">
                       {{item.createDate|dateFormatting}} &nbsp;&nbsp;
                       {{item.dirName}}&nbsp;&nbsp;
                       {{item.fileSize}}kb
@@ -62,9 +62,9 @@
                   <el-button type="text" size="mini" @click="ifthroughtitle='批量审批退回';showDialog()">批量退回</el-button>
                 </el-col>
               </el-row>
-              <el-row :gutter="20" v-for="(item, index) in boxTableData||[]" :key="index" style="clear: both;height: 1.9rem;border-bottom: 1px solid #ededed;">
-                <el-col :span="3" :style="{'line-height':'1.9rem'}">
-                  <el-checkbox v-model="item.checked" style="height: 0.5rem;margin-left:0.1rem"></el-checkbox>
+              <el-row :gutter="20" v-for="(item, index) in boxTableData||[]" :key="index" style="clear: both;height: 2.1rem;border-bottom: 1px solid #ededed;">
+                <el-col :span="3" :style="{'line-height':'2.1rem'}">
+                  <el-checkbox v-model="item.checked" style="height: 0.6rem;margin-left:0.1rem"></el-checkbox>
                 </el-col>
                 <el-col :span="15">
                   <div style="margin-top: 0.1rem;" class="titleElipse">
@@ -127,18 +127,18 @@
     <div class="bottomClass">
       <div class="swiper-container" id="nav">
         <div class="swiper-wrapper">
-          <div class="swiper-slide" @click="appFileListByCondition()">
+          <el-button type="text" class="swiper-slide" @click="appFileListByCondition()">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
-            <span>我的文件</span>
-          </div>
-          <div class="swiper-slide" @click="type='3';getApproveRecordList();">
+            <span>我的文件{{activeIndex}}</span>
+          </el-button>
+          <el-button type="text" class="swiper-slide" @click="type='3';getApproveRecordList();">
             <img src="../assets/img/shenpi.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的审批</span>
-          </div>
-          <div class="swiper-slide" @click="getmsgFun">
+          </el-button>
+          <el-button type="text" class="swiper-slide" @click="getmsgFun">
             <img src="../assets/img/msg.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的消息提醒</span>
-          </div>
+          </el-button>
           <div class="bar">
             <div class="color"></div>
           </div>
@@ -198,6 +198,7 @@
         ifthrough: false,
         ifthroughtitle: '审批通过',
         approvalObj: null,
+        activeIndex: 1
       };
     },
     filters: {
@@ -209,7 +210,7 @@
       }
     },
     mounted() {
-      swiperFun();
+      swiperFun(this);
       /* this.getApproveRecordList();
        this.getmsgFun(); */
       this.appFileListByCondition();
@@ -230,12 +231,13 @@
         let that = this;
         var a = document.getElementById('page');
         var b = document.getElementsByClassName('slidepage');
+        a.style.height = length + 'rem';
         setTimeout(() => {
           that.$nextTick(() => {
             a.style.height = length + 'rem';
+            console.log(index, b[index].clientHeight, a.style.height, a.scrollHeight);
           })
-        }, 300)
-        console.log(index, b[index].clientHeight, a.style.height, a.scrollHeight);
+        }, 500)
       },
       backFun() {
         this.$router.push('/');
@@ -396,6 +398,7 @@
         }
       },
       async getApproveRecordList() { //审批
+        this.boxTableData = [];
         let obj = {};
         obj = {
           "approveStatus": this.type,
@@ -403,7 +406,6 @@
           "pn": this.pn,
           "ps": this.ps
         }
-        this.boxTableData = [];
         const {
           code,
           data,
@@ -411,6 +413,7 @@
         if (code == '0000') {
           if (data.list) {
             let list = data.list;
+            this.boxTableData=[];
             list.forEach(a => {
               let type = (a.documentType == 1) ? '送审' : '借阅';
               let icon = (a.approveStatus == 0) ? daisp : yisp;
@@ -432,8 +435,8 @@
             });
           }
           let length = 4;
-          if (data.list.length>0) {
-            length = data.list.length * 1.9 + 2;
+          if (data.list && data.list.length > 0) {
+            length = data.list.length * 1.9 + 3;
           }
           this.getHeight(1, length);
         }
@@ -447,6 +450,12 @@
 
     .bottomBorder:hover {
       border-bottom: 3px solid deepskyblue;
+    }
+
+    .bottomClass {
+      .el-button+.el-button {
+        margin-left: 0px;
+      }
     }
 
     .titleElipse {
