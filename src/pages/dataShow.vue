@@ -127,18 +127,18 @@
     <div class="bottomClass">
       <div class="swiper-container" id="nav">
         <div class="swiper-wrapper">
-          <el-button type="text" class="swiper-slide" @click="appFileListByCondition()">
+          <div  class="swiper-slide" @click="appFileListByCondition()">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的文件{{activeIndex}}</span>
-          </el-button>
-          <el-button type="text" class="swiper-slide" @click="type='3';getApproveRecordList();">
+          </div>
+          <div  class="swiper-slide" @click="type='3';getApproveRecordList();">
             <img src="../assets/img/shenpi.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的审批</span>
-          </el-button>
-          <el-button type="text" class="swiper-slide" @click="getmsgFun">
+          </div>
+          <div class="swiper-slide" @click="getmsgFun">
             <img src="../assets/img/msg.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的消息提醒</span>
-          </el-button>
+          </div>
           <div class="bar">
             <div class="color"></div>
           </div>
