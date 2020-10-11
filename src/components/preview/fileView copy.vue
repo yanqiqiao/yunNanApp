@@ -170,7 +170,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .pdfView {
   transition: all 0.5s;
   min-height: 100vh;

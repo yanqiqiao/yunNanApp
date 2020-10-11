@@ -190,7 +190,7 @@
         fileList: [],
         boxTableData: [],
         pn: 1,
-        ps: 20,
+        ps: 200000,
         type: '3',
         searchText: '',
         allmsg: [],
