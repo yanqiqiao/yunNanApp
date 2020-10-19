@@ -127,11 +127,11 @@
     <div class="bottomClass">
       <div class="swiper-container" id="nav">
         <div class="swiper-wrapper">
-          <div  class="swiper-slide" @click="appFileListByCondition()">
+          <div class="swiper-slide" @click="appFileListByCondition()">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的文件</span>
           </div>
-          <div  class="swiper-slide" @click="type='3';getApproveRecordList();">
+          <div class="swiper-slide" @click="type='3';getApproveRecordList();">
             <img src="../assets/img/shenpi.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
             <span>我的审批</span>
           </div>
@@ -275,7 +275,7 @@
       },
       searchApproveRecordList() {
         let that = this;
-        this.boxTableData=[];
+        this.boxTableData = [];
         setTimeout(() => {
           that.getApproveRecordList();
         }, 600)
@@ -413,7 +413,7 @@
         if (code == '0000') {
           if (data.list) {
             let list = data.list;
-            this.boxTableData=[];
+            this.boxTableData = [];
             list.forEach(a => {
               let type = (a.documentType == 1) ? '送审' : '借阅';
               let icon = (a.approveStatus == 0) ? daisp : yisp;
@@ -447,6 +447,11 @@
 <style lang="less">
   .dataShow {
     height: 100%;
+
+    .el-input__inner {
+      height: 40px;
+      line-height: 40px;
+    }
 
     .bottomBorder:hover {
       border-bottom: 3px solid deepskyblue;

@@ -105,6 +105,11 @@
     background-clip: content-box;
     overflow: hidden;
 
+    .el-input__inner {
+      height: 40px;
+      line-height: 40px;
+    }
+
     .el-form-item__error {
       margin-left: 41%;
       margin-top: 10px;
