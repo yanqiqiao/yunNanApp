@@ -92,13 +92,18 @@
 <style lang="less">
   .login {
     position: absolute;
+    width: 100%;
+    top: 0px;
     bottom: 0px;
+    right: 0px;
+    left: 0px;
     height: 100%;
     background-image: url("../assets/img/app_login_bg.png");
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: 100% 100%;
     background-clip: content-box;
+    overflow: hidden;
 
     .el-form-item__error {
       margin-left: 41%;

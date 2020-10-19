@@ -129,7 +129,7 @@
         <div class="swiper-wrapper">
           <div  class="swiper-slide" @click="appFileListByCondition()">
             <img src="../assets/img/file.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
-            <span>我的文件{{activeIndex}}</span>
+            <span>我的文件</span>
           </div>
           <div  class="swiper-slide" @click="type='3';getApproveRecordList();">
             <img src="../assets/img/shenpi.png" style="width: 0.8rem;height: 0.8rem;margin-right: 10px">
@@ -198,7 +198,6 @@
         ifthrough: false,
         ifthroughtitle: '审批通过',
         approvalObj: null,
-        activeIndex: 1
       };
     },
     filters: {
@@ -276,6 +275,7 @@
       },
       searchApproveRecordList() {
         let that = this;
+        this.boxTableData=[];
         setTimeout(() => {
           that.getApproveRecordList();
         }, 600)
