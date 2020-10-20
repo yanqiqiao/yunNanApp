@@ -36,7 +36,7 @@ Vue.use(ElementUI)
 Vue.use(VueResource)
 Vue.prototype.$axios = Axios
 Vue.config.productionTip = false
-//Axios.defaults.baseURL = config.BASEURL;
+Axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "": config.BASEURL;
 Axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 // 超时时间
 Axios.defaults.timeout = 50000;
@@ -53,7 +53,6 @@ Axios.interceptors.request.use(config => {
   });
   return Promise.reject(error)
 });
-
 
 
 new Vue({
